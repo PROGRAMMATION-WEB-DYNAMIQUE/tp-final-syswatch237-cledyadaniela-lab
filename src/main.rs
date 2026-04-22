@@ -341,7 +341,7 @@ fn handle_client(mut stream: TcpStream, snapshot: Arc<Mutex<SystemSnapshot>>) {
     log_event(&format!("[+] Connexion de {}", peer));
 
     // Étape 1 : demander le token
-    let _ = stream.write_all(b"TOKEN: ");
+    let _ = stream.write_all(b"TOKEN:\n");
     let mut reader = BufReader::new(stream.try_clone().expect("Clone failed"));
     let mut token_line = String::new();
     if reader.read_line(&mut token_line).is_err() || token_line.trim() != AUTH_TOKEN {

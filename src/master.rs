@@ -10,20 +10,27 @@ const AUTH_TOKEN: &str = "ENSPD2026";
 const PORT: u16 = 7878;
 
 // Liste statique des machines — à remplir avec les IPs des PC étudiants
-// En cours : chaque étudiant communique son IP via `ipconfig`
+// MODE LOCAL: utilise 127.0.0.1 (localhost) pour tester sur une seule machine
+// MODE RÉSEAU: remplace 127.0.0.1 par les vraies IPs (192.168.x.x ou 10.x.x.x)
 fn machines() -> HashMap<String, String> {
     let mut m = HashMap::new();
     // format : "nom_affichage" => "ip"
-    m.insert("PC-01-TSEFACK".to_string(), "192.168.1.101".to_string());
-    m.insert("PC-02-FOKAM".to_string(), "192.168.1.102".to_string());
-    m.insert("PC-03-NZEUTEM".to_string(), "192.168.1.103".to_string());
-    m.insert("ateba".to_string(), "192.168.1.105".to_string());
-    // Ajouter autant de lignes que d'étudiants
+    
+    // === MODE LOCAL (DÉVELOPPEMENT) ===
+    m.insert("PC-LOCAL".to_string(), "127.0.0.1".to_string());
+    
+    // === MODE RÉSEAU (À CONFIGURER AVEC NOS VRAIES IPS) ===
+    // Remplacer les IPs ci-dessous par celles retrouvées avec `ipconfig`
+    // m.insert("PC-CLEDYA".to_string(), "192.168.1.50".to_string());
+    // m.insert("PC-CELIANE".to_string(), "192.168.1.51".to_string());
+    // m.insert("PC-LARISSA".to_string(), "192.168.1.52".to_string());
+    
     m
 }
 
 struct AgentSession {
     #[allow(dead_code)]
+
     name: String,
     #[allow(dead_code)]
     ip: String,
@@ -50,7 +57,7 @@ impl AgentSession {
         };
 
         // Authentification
-        session.read_until_prompt("TOKEN: ")?;
+        session.read_until_prompt("TOKEN:")?;
         session.send(AUTH_TOKEN)?;
         let resp = session.read_line()?;
         if resp.trim() != "OK" {
